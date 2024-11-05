@@ -1,28 +1,40 @@
-'use strict';
+"use strict";
+const sequelize = require("sequelize");
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Relations', {
-      id: {
+    const transaction = await queryInterface.sequelize.transaction();
+
+    try {
+      await queryInterface.addColumn("addresses", "user_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      phone: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-    });
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   },
+
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Relations');
-  }
+    const transaction = await queryInterface.sequelize.transaction();
+
+    try {
+      await queryInterface.removeColumn("addresses", "user_id");
+
+      await transaction.commit();
+    } catch (error) {
+      throw error;
+    }
+
+    await queryInterface.dropTable("relations");
+  },
 };
