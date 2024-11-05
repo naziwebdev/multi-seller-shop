@@ -11,4 +11,20 @@ const db = new Sequelize({
   logging: false,
 });
 
-module.exports = { db };
+//* JsDoc
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const User = require("./models/User")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Address = require("./models/Address")(db);
+
+User.hasMany(Address, {
+  foreignKey: "user_id",
+  onDelete: "CASCADE",
+});
+
+Address.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+module.exports = { db, User, Address };
