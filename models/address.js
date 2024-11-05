@@ -1,23 +1,53 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Address extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+const { DataTypes } = require("sequelize");
+const { db } = require("../db");
+
+//user_id & city_id have relation and dont put in model
+
+const Address = (sequelize) => {
+  return db.define(
+    "address",
+    {
+      id: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      postalCode: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      location: {
+        type: DataTypes.JSONB, // store a object
+        allowNull: false,
+        validate: {
+          isValidLocation(value) {
+            if (!value.lat || typeof value.lat !== "number") {
+              throw new Error(
+                "Latitude (lat) is required and must be a number"
+              );
+            }
+            if (!value.lng || typeof value.lng !== "number") {
+              throw new Error(
+                "Longitude (lng) is required and must be a number"
+              );
+            }
+          },
+        },
+      },
+    },
+    {
+      tableName: "addresses",
     }
-  }
-  Address.init({
-    city: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Address',
-  });
-  return Address;
+  );
 };
+
+module.exports = Address;
