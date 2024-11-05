@@ -2,7 +2,8 @@ const express = require("express");
 const cookiePrser = require("cookie-parser");
 const path = require("path");
 const { setHeaders } = require("./middlewares/headers");
-const { error } = require("console");
+
+const authRouter = require("./routes/v1/auth");
 
 const app = express();
 
@@ -20,7 +21,7 @@ app.use(setHeaders);
 app.use(express.static(path.resolve(__dirname, "public")));
 
 //Routers
-
+app.use("/api/v1/auth", authRouter);
 
 //404 not found path
 app.use((res, res) => {
