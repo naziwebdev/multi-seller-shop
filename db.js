@@ -17,6 +17,8 @@ const User = require("./models/User")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Address = require("./models/Address")(db);
 
+//Associations
+
 User.hasMany(Address, {
   foreignKey: "user_id",
   onDelete: "CASCADE",
