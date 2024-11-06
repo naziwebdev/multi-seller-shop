@@ -19,11 +19,10 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      roles: {
-        type: Sequelize.ARRAY(DataTypes.STRING),
+      role: {
+        type: Sequelize.JSON,
         allowNull: false,
-        defaultValue: ["user"],
-        validate: { isIn: [["admin", "user", "seller"]] },
+        defaultValue:JSON.stringify(["user"]),
       },
       created_at: {
         allowNull: false,

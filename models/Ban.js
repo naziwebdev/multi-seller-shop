@@ -1,8 +1,10 @@
 const { DataTypes } = require("sequelize");
 
+//in models if dont put timestaps :false sequelize generate it automoticlly and we get err
+
 const Ban = (sequelize) => {
   return sequelize.define(
-    "bans",
+    "Ban",
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -15,7 +17,7 @@ const Ban = (sequelize) => {
         allowNull: false,
       },
     },
-    { tableNames: "bans" }
+    { tableName: "bans", timestamps: false }
   );
 };
 

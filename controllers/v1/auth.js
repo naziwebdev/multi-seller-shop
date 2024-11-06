@@ -1,10 +1,44 @@
-const { User } = require("../../db");
+const { User, Ban } = require("../../db");
 const configs = require("../../configs");
 const jwt = require("jsonwebtoken");
-const {generateOtp,getOtpDetails,getOtpRedisPattern} = require('../../helpers/otpRedis')
+const {
+  generateOtp,
+  getOtpDetails,
+  getOtpRedisPattern,
+} = require("../../helpers/otpRedis");
+const {
+  sendOtpValidator,
+  verifyOtpValidator,
+} = require("../../validators/auth");
+
+const { sendSms } = require("../../services/otp");
 
 exports.send = async (req, res, next) => {
   try {
+    const { phone } = req.body;
+
+    await sendOtpValidator.validate({ phone }, { abortEarly: false });
+
+    const isBanned = await Ban.findOne({ where: { phone } });
+
+    if (isBanned) {
+      return res.status(403).json({ message: "this phone is banned" });
+    }
+
+    const { expired, remainingTime } = await getOtpDetails(phone);
+    if (!expired) {
+      return res
+        .status(200)
+        .json({ message: `otp sent already try again after ${remainingTime}` });
+    }
+
+    const otp = await generateOtp(phone);
+
+    // await sendSms(phone,otp);
+
+    return res
+      .status(200)
+      .json({ message: "otp sent to your phone successfully", otp });
   } catch (error) {
     next(error);
   }

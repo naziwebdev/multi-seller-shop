@@ -24,7 +24,7 @@ app.use(express.static(path.resolve(__dirname, "public")));
 app.use("/api/v1/auth", authRouter);
 
 //404 not found path
-app.use((res, res) => {
+app.use((req, res) => {
   console.log(`404 not found  path ${req.path}`);
 
   return res.status(404).json({ message: "404 ! not fount the path" });

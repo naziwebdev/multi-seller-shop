@@ -4,7 +4,7 @@ const { DataTypes } = require("sequelize");
 
 const Address = (sequelize) => {
   return sequelize.define(
-    "address",
+    "Address",
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -42,9 +42,14 @@ const Address = (sequelize) => {
           },
         },
       },
+      cityId: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+      },
     },
     {
       tableName: "addresses",
+      timestamps: false,
     }
   );
 };

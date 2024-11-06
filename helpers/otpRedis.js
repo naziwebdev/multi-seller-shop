@@ -32,13 +32,13 @@ const getOtpDetails = async (phone) => {
 };
 
 const generateOtp = async (phone, length = 4, expireTime = 1) => {
-  const digits = "0123456789";
-
+  const digist = ["0","1","2","3","4","5","6","7","8","9"];
   let otp = "";
 
   for (let i = 0; i < length; i++) {
-    otp += digits[Math.random() * digits.length];
+    otp = otp + digist[Math.floor(Math.random()*digist.length)]; 
   }
+
 
   const hashedOpt = await bcrypt.hash(otp, 12);
 

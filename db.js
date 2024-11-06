@@ -8,7 +8,7 @@ const db = new Sequelize({
   password: configs.db.password,
   database: configs.db.name,
   dialect: configs.db.dialect,
-  logging: false,
+  logging: console.log,
 });
 
 //* JsDoc
@@ -16,6 +16,12 @@ const db = new Sequelize({
 const User = require("./models/User")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Address = require("./models/Address")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Ban = require("./models/Ban")(db);
+
+
+
+//point : even models that dont have relations must import in db till pass db to model and export model & import it from this path
 
 //Associations
 
@@ -29,4 +35,4 @@ Address.belongsTo(User, {
   as: "user",
 });
 
-module.exports = { db, User, Address };
+module.exports = { db, User, Address , Ban };

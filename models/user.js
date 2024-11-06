@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 
 const User = (sequelize) => {
   return sequelize.define(
-    "user",
+    "User",
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -20,11 +20,20 @@ const User = (sequelize) => {
         allowNull: false,
         unique: true,
       },
-      roles: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+      role: {
+        type: DataTypes.JSONB,
         allowNull: false,
         defaultValue: ["user"],
-        validate: { isIn: [["admin", "user", "seller"]] },
+        validate: {
+          isValidRoleArray(value) {
+            const validRoles = ["admin", "user", "seller"];
+            value.forEach((role) => {
+              if (!validRoles.includes(role)) {
+                throw new Error(`Invalid role: ${role}`);
+              }
+            });
+          },
+        },
       },
     },
     {
