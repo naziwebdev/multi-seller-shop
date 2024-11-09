@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 
-//user_id & city_id have relation and dont put in model
+//user_id  have relation and dont put in model
 
 const Address = (sequelize) => {
   return sequelize.define(

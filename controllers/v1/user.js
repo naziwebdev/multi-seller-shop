@@ -1,4 +1,7 @@
-const { User, Ban } = require("../../db");
+const { User, Ban, Address } = require("../../db");
+const { createAddressValidator } = require("../../validators/address");
+
+const citis = require("../../cities/cities.json");
 
 exports.banUser = async (req, res, next) => {
   try {
@@ -28,6 +31,39 @@ exports.banUser = async (req, res, next) => {
     await Ban.create({ phone: user.phone });
 
     return res.status(200).json({ message: "user baned successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.createAddress = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const { name, postalCode, address, location, cityId } = req.body;
+
+    await createAddressValidator.validate({
+      name,
+      postalCode,
+      address,
+      location,
+      cityId,
+    });
+
+    const isValidCityId = citis.find((city) => +city.id === +cityId);
+    if (!isValidCityId) {
+      return res.status(409).json({ message: "cityId is not valid" });
+    }
+
+    await Address.create({
+      name,
+      postalCode,
+      address,
+      location,
+      cityId,
+      user_id: user.id,
+    });
+
+    return res.status(201).json({ message: "address created successfully" });
   } catch (error) {
     next(error);
   }

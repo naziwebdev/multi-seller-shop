@@ -7,6 +7,7 @@ const router = express.Router()
 
 
 router.route('/ban/:userId').post(auth,roleGuard("admin"),controller.banUser)
+router.route('/me/addresses').post(auth,controller.createAddress)
 
 
 module.exports = router
