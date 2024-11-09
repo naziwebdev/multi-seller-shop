@@ -146,3 +146,11 @@ exports.removeAddress = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getAll = async (req, res, next) => {
+  try {
+    
+  } catch (error) {
+    next(error);
+  }
+};

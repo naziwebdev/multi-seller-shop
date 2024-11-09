@@ -5,6 +5,7 @@ const controller = require("../../controllers/v1/user");
 
 const router = express.Router();
 
+router.route("/").get(auth, roleGuard("admin"), controller.getAll);
 router.route("/ban/:userId").post(auth, roleGuard("admin"), controller.banUser);
 router.route("/me/addresses").post(auth, controller.createAddress);
 router
