@@ -25,7 +25,7 @@ const Address = (sequelize) => {
         allowNull: false,
       },
       location: {
-        type: DataTypes.JSONB, // store a object
+        type: DataTypes.JSON, // store a object
         allowNull: false,
         validate: {
           isValidLocation(value) {

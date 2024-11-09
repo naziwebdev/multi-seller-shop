@@ -18,8 +18,8 @@ const User = require("./models/User")(db);
 const Address = require("./models/Address")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Ban = require("./models/Ban")(db);
-
-
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Seller = require("./models/Seller")(db);
 
 //point : even models that dont have relations must import in db till pass db to model and export model & import it from this path
 
@@ -35,4 +35,14 @@ Address.belongsTo(User, {
   as: "user",
 });
 
-module.exports = { db, User, Address , Ban };
+User.hasOne(Seller, {
+  foreignKey: "user_id",
+  onDelete: "CASCADE",
+});
+
+Seller.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+module.exports = { db, User, Address, Ban, Seller };
