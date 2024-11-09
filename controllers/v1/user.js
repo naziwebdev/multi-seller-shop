@@ -6,6 +6,8 @@ const {
 
 const citis = require("../../cities/cities.json");
 
+const { createPaginationData } = require("../../utils/paginationData");
+
 exports.banUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
@@ -149,7 +151,18 @@ exports.removeAddress = async (req, res, next) => {
 
 exports.getAll = async (req, res, next) => {
   try {
-    
+    const { page = 1, limit = 4 } = req.query;
+
+    const offset = (page - 1) * limit;
+
+    const users = await User.findAll({ offset: +offset, limit: +limit });
+
+    const totalUsers = await User.count();
+
+    return res.status(200).json({
+      users,
+      pagination: createPaginationData(page, limit, totalUsers, "Users"),
+    });
   } catch (error) {
     next(error);
   }
