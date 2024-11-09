@@ -6,6 +6,7 @@ const { setHeaders } = require("./middlewares/headers");
 const authRouter = require("./routes/v1/auth");
 const userRouter = require("./routes/v1/user");
 const locationRouter = require("./routes/v1/location");
+const sellerRouter = require("./routes/v1/seller");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(express.static(path.resolve(__dirname, "public")));
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/locations", locationRouter);
+app.use("/api/v1/seller", sellerRouter);
 
 //404 not found path
 app.use((req, res) => {

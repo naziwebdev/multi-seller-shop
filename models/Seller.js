@@ -1,9 +1,8 @@
 const { DataTypes } = require("sequelize");
-const { db } = require("../db");
 
 //user_id dont put in model and have relation
 const Seller = (sequelize) => {
-  return db.define(
+  return sequelize.define(
     "Seller",
     {
       id: {

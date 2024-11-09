@@ -7,8 +7,8 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(auth, roleGuard("seller"), controllers.get)
   .post(auth, roleGuard("seller"), controllers.create)
+  .get(auth, roleGuard("seller"), controllers.get)
   .patch(auth, roleGuard("seller"), controllers.update)
   .delete(auth, roleGuard("seller"), controllers.remove);
 
