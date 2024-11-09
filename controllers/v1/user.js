@@ -120,3 +120,29 @@ exports.updateAddress = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.removeAddress = async (req, res, next) => {
+  try {
+    const { addressId } = req.params;
+
+    if (
+      addressId === undefined ||
+      addressId === null ||
+      addressId === "" ||
+      isNaN(addressId)
+    ) {
+      return res.status(422).json({ message: "addressId is not valid" });
+    }
+
+    const address = await Address.findOne({ where: { id: +addressId } });
+    if (!address) {
+      return res.status(404).json({ message: "not found address" });
+    }
+
+    await Address.destroy({ where: { id: +addressId } });
+
+    return res.status(200).json({ message: "address remove successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
