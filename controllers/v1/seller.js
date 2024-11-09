@@ -67,6 +67,13 @@ exports.remove = async (req, res, next) => {
 };
 exports.get = async (req, res, next) => {
   try {
+    const user = req.user;
+    const seller = await Seller.findOne({ where: { user_id: user.id } });
+    if (!seller) {
+      return res.status(404).json({ message: "not found seller" });
+    }
+    seller.contactDetails = JSON.parse(seller.contactDetails);
+    return res.status(200).json(seller);
   } catch (error) {
     next(error);
   }
