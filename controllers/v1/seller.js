@@ -61,6 +61,16 @@ exports.update = async (req, res, next) => {
 };
 exports.remove = async (req, res, next) => {
   try {
+    const user = req.user;
+
+    const seller = await Seller.findOne({ where: { user_id: user.id } });
+    if (!seller) {
+      return res.status(400).json({ message: "seller not found" });
+    }
+
+    await Seller.destroy({ where: { id: seller.id } });
+
+    return res.status(200).json({ message: "seller removed successfully" });
   } catch (error) {
     next(error);
   }
