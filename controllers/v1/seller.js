@@ -7,7 +7,6 @@ const cities = require("../../cities/cities.json");
 
 exports.create = async (req, res, next) => {
   try {
-    console.log('ok')
     const user = req.user;
     const { name, contactDetails, cityId } = req.body;
 
@@ -33,6 +32,29 @@ exports.create = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
+    const user = req.user;
+    const { name, contactDetails, cityId } = req.body;
+
+    await updateSellerValidator.validate({ name, contactDetails, cityId });
+
+    const isValidCityId = cities.find((city) => +city.id === +cityId);
+    if (!isValidCityId) {
+      return res.status(409).json({ message: "cityId is not valid" });
+    }
+
+    const existSeller = await Seller.findOne({
+      where: { user_id: user.id },
+    });
+    if (!existSeller) {
+      return res.status(400).json({ message: "seller not found" });
+    }
+
+    await Seller.update(
+      { name, contactDetails, cityId },
+      { where: { id: existSeller.id } }
+    );
+
+    return res.status(200).json({ message: "seller updated successfully" });
   } catch (error) {
     next(error);
   }
