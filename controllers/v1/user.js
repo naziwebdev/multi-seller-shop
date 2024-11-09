@@ -4,7 +4,7 @@ exports.banUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
 
-    console.log(userId)
+    console.log(userId);
 
     if (
       userId === undefined ||
