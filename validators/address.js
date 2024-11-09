@@ -14,4 +14,15 @@ const createAddressValidator = yup.object({
   cityId: yup.number().required("cityId is required").positive().integer(),
 });
 
-module.exports = { createAddressValidator };
+const updateAddressValidator = yup.object({
+  name: yup.string().min(3).max(255),
+  postalCode: yup.string().length(10, "postalCode must be 10 char"),
+  address: yup.string().min(10).max(1000),
+  location: yup.object().shape({
+    lat: yup.number().min(-90).max(90),
+    lng: yup.number().min(-180).max(180),
+  }),
+  cityId: yup.number().positive().integer(),
+});
+
+module.exports = { createAddressValidator, updateAddressValidator };

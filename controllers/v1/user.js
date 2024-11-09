@@ -1,13 +1,14 @@
 const { User, Ban, Address } = require("../../db");
-const { createAddressValidator } = require("../../validators/address");
+const {
+  createAddressValidator,
+  updateAddressValidator,
+} = require("../../validators/address");
 
 const citis = require("../../cities/cities.json");
 
 exports.banUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
-
-    console.log(userId);
 
     if (
       userId === undefined ||
@@ -64,6 +65,57 @@ exports.createAddress = async (req, res, next) => {
     });
 
     return res.status(201).json({ message: "address created successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateAddress = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const { name, postalCode, address, location, cityId } = req.body;
+    const { addressId } = req.params;
+
+    if (
+      addressId === undefined ||
+      addressId === null ||
+      addressId === "" ||
+      isNaN(addressId)
+    ) {
+      return res.status(422).json({ message: "addressId is not valid" });
+    }
+
+    await updateAddressValidator.validate({
+      name,
+      postalCode,
+      address,
+      location,
+      cityId,
+    });
+
+    const isValidCityId = citis.find((city) => +city.id === +cityId);
+    if (!isValidCityId) {
+      return res.status(409).json({ message: "cityId is not valid" });
+    }
+
+    const addressRaw = await Address.findOne({
+      where: { id: +addressId },
+      raw: false,
+    });
+
+    if (!addressRaw) {
+      return res.status(404).json({ message: "not  fount address" });
+    }
+
+    addressRaw.name = name || addressRaw.name;
+    addressRaw.postalCode = postalCode || addressRaw.postalCode;
+    addressRaw.address = address || addressRaw.address;
+    addressRaw.location = location || addressRaw.location;
+    addressRaw.cityId = cityId || addressRaw.cityId;
+
+    await addressRaw.save();
+
+    return res.status(200).json({ message: "address updated successfully" });
   } catch (error) {
     next(error);
   }
