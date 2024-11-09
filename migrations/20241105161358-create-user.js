@@ -22,7 +22,7 @@ module.exports = {
       role: {
         type: Sequelize.JSON,
         allowNull: false,
-        defaultValue:JSON.stringify(["user"]),
+        defaultValue: ["user"],
       },
       created_at: {
         allowNull: false,

@@ -14,7 +14,6 @@ const {
 } = require("../../validators/auth");
 
 const { sendSms } = require("../../services/otp");
-const { raw } = require("mysql2");
 
 exports.send = async (req, res, next) => {
   try {
@@ -67,7 +66,6 @@ exports.verify = async (req, res, next) => {
     }
 
     const existUser = await User.findOne({ where: { phone } });
-    console.log(existUser);
 
     if (existUser) {
       const token = jwt.sign(
@@ -94,7 +92,9 @@ exports.verify = async (req, res, next) => {
         phone,
         username: phone,
         role: isFirstUser
-          ? ["admin"]
+          ? isSeller
+            ? ["admin", "seller"]
+            : ["admin"]
           : isSeller
           ? ["user", "seller"]
           : ["user"],

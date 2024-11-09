@@ -21,7 +21,7 @@ const User = (sequelize) => {
         unique: true,
       },
       role: {
-        type: DataTypes.JSONB,
+        type: DataTypes.JSON,
         allowNull: false,
         defaultValue: ["user"],
         validate: {
