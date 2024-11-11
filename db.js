@@ -20,6 +20,8 @@ const Address = require("./models/Address")(db);
 const Ban = require("./models/Ban")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Seller = require("./models/Seller")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Category = require("./models/category")(db);
 
 //point : even models that dont have relations must import in db till pass db to model and export model & import it from this path
 
@@ -45,4 +47,14 @@ Seller.belongsTo(User, {
   as: "user",
 });
 
-module.exports = { db, User, Address, Ban, Seller };
+Category.hasMany(Category, {
+  foreignKey: "parent_id",
+  onDelete: "CASCADE",
+});
+
+Category.belongsTo(Category, {
+  foreignKey: "parent_id",
+  as: "parent",
+});
+
+module.exports = { db, User, Address, Ban, Seller, Category };
