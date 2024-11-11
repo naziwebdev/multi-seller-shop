@@ -1,10 +1,9 @@
 const { DataTypes } = require("sequelize");
 
-//parent_id have a self-refrence relation to category
 
-const Category = (sequelize) => {
+const FiltersCategory = (sequelize) => {
   return sequelize.define(
-    "Category",
+    "FiltersCategory",
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -12,7 +11,7 @@ const Category = (sequelize) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      title: {
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -24,26 +23,34 @@ const Category = (sequelize) => {
       description: {
         type: DataTypes.STRING,
       },
-      icon: {
-        type: DataTypes.JSON,
+      type: {
+        type: DataTypes.ENUM("radio", "selectbox"),
         allowNull: false,
+      },
+      options: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        defaultValue: undefined,
         validate: {
-          isValidIcon(value) {
-            if (!value.filename || typeof value.filename !== "object") {
-              throw new Error("filename is required and must be a object");
-            }
-            if (!value.pathname || typeof value.pathname !== "object") {
-              throw new Error("pathname is required and must be a object");
+          isArrayOptions(value) {
+            if (!Array.isArray(value)) {
+              throw new Error("Options must be an array");
             }
           },
         },
       },
+      min: {
+        type: DataTypes.INTEGER,
+      },
+      max: {
+        type: DataTypes.INTEGER,
+      },
     },
     {
-      tableName: "categories",
+      tableName: "filters_categories",
       timestamps: false,
     }
   );
 };
 
-module.exports = Category;
+module.exports = FiltersCategory;

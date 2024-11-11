@@ -24,6 +24,8 @@ const Seller = require("./models/Seller")(db);
 const Category = require("./models/category")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const SubCategory = require("./models/Subcategory")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const FiltersCategory = require("./models/FiltersCategory")(db);
 
 //Associations
 
@@ -71,4 +73,26 @@ SubCategory.belongsTo(Category, {
   as: "parent",
 });
 
-module.exports = { db, User, Address, Ban, Seller, Category , SubCategory };
+//filtersCategory & category
+Category.hasMany(FiltersCategory, {
+  foreignKey: "category_id",
+  onDelete: "CASCADE",
+});
+
+FiltersCategory.belongsTo(Category, {
+  foreignKey: "category_id",
+  as: "parent",
+});
+
+//filtersCategory & subCategory
+SubCategory.hasMany(FiltersCategory, {
+  foreignKey: "subCategory_id",
+  onDelete: "CASCADE",
+});
+
+FiltersCategory.belongsTo(SubCategory, {
+  foreignKey: "subCategory_id",
+  as: "subCategory",
+});
+
+module.exports = { db, User, Address, Ban, Seller, Category, SubCategory ,FiltersCategory};
