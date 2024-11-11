@@ -28,7 +28,7 @@ module.exports = {
 
       await queryInterface.addColumn("categories", "parent_id", {
         type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "categories",
           key: "id",

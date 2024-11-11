@@ -29,11 +29,11 @@ const Category = (sequelize) => {
         allowNull: false,
         validate: {
           isValidIcon(value) {
-            if (!value.filename || typeof value.filename !== "object") {
-              throw new Error("filename is required and must be a object");
+            if (!value.filename || typeof value.filename !== "string") {
+              throw new Error("filename is required and must be a string");
             }
-            if (!value.pathname || typeof value.pathname !== "object") {
-              throw new Error("pathname is required and must be a object");
+            if (!value.pathname || typeof value.pathname !== "string") {
+              throw new Error("pathname is required and must be a string");
             }
           },
         },

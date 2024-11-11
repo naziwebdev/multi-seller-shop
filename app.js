@@ -7,6 +7,7 @@ const authRouter = require("./routes/v1/auth");
 const userRouter = require("./routes/v1/user");
 const locationRouter = require("./routes/v1/location");
 const sellerRouter = require("./routes/v1/seller");
+const categoryRouter = require("./routes/v1/category");
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/locations", locationRouter);
 app.use("/api/v1/seller", sellerRouter);
+app.use("/api/v1/categories", categoryRouter);
 
 //404 not found path
 app.use((req, res) => {
