@@ -46,9 +46,9 @@ module.exports = {
         onDelete: "CASCADE",
       });
 
-      await queryInterface.addColumn("fitlters_categories", "category_id", {
+      await queryInterface.addColumn("filters_categories", "category_id", {
         type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false,
+        allowNull:true,
         references: {
           model: "categories",
           key: "id",
@@ -56,9 +56,9 @@ module.exports = {
         onDelete: "CASCADE",
       });
 
-      await queryInterface.addColumn("fitlters_categories", "subCategory_id", {
+      await queryInterface.addColumn("filters_categories", "subCategory_id", {
         type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "sub_categories",
           key: "id",
@@ -81,9 +81,9 @@ module.exports = {
       await queryInterface.removeColumn("sellers", "user_id");
       await queryInterface.removeColumn("categories", "parent_id");
       await queryInterface.removeColumn("sub_categories", "parent_id");
-      await queryInterface.removeColumn("fitlters_categories", "category_id");
+      await queryInterface.removeColumn("filters_categories", "category_id");
       await queryInterface.removeColumn(
-        "fitlters_categories",
+        "filters_categories",
         "subCategory_id"
       );
 
