@@ -1,4 +1,4 @@
-const { Category, SubCategory, FiltersCategory } = require("../../db");
+const { Category} = require("../../db");
 const {
   createCategoryValidator,
   editCategoryValidator,
