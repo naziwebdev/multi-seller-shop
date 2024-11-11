@@ -22,11 +22,12 @@ const Ban = require("./models/Ban")(db);
 const Seller = require("./models/Seller")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Category = require("./models/category")(db);
-
-//point : even models that dont have relations must import in db till pass db to model and export model & import it from this path
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const SubCategory = require("./models/Subcategory")(db);
 
 //Associations
 
+//user & address
 User.hasMany(Address, {
   foreignKey: "user_id",
   onDelete: "CASCADE",
@@ -37,6 +38,7 @@ Address.belongsTo(User, {
   as: "user",
 });
 
+//user && seller
 User.hasOne(Seller, {
   foreignKey: "user_id",
   onDelete: "CASCADE",
@@ -47,6 +49,7 @@ Seller.belongsTo(User, {
   as: "user",
 });
 
+//category && category
 Category.hasMany(Category, {
   foreignKey: "parent_id",
   onDelete: "CASCADE",
@@ -57,4 +60,15 @@ Category.belongsTo(Category, {
   as: "parent",
 });
 
-module.exports = { db, User, Address, Ban, Seller, Category };
+//category && subCategory
+Category.hasMany(SubCategory, {
+  foreignKey: "parent_id",
+  onDelete: "CASCADE",
+});
+
+SubCategory.belongsTo(Category, {
+  foreignKey: "parent_id",
+  as: "parent",
+});
+
+module.exports = { db, User, Address, Ban, Seller, Category , SubCategory };

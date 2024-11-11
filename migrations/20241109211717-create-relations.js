@@ -36,6 +36,16 @@ module.exports = {
         onDelete: "CASCADE",
       });
 
+      await queryInterface.addColumn("sub_categories", "parent_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: "categories",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
@@ -50,6 +60,7 @@ module.exports = {
       await queryInterface.removeColumn("addresses", "user_id");
       await queryInterface.removeColumn("sellers", "user_id");
       await queryInterface.removeColumn("categories", "parent_id");
+      await queryInterface.removeColumn("sub_categories", "parent_id");
 
       await transaction.commit();
     } catch (error) {
