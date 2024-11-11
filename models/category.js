@@ -1,10 +1,10 @@
 const { DataTypes } = require("sequelize");
-const { db } = require("../db");
+
 
 //parent_id have a self-refrence relation to category
 
 const Category = (sequelize) => {
-  return db.define(
+  return sequelize.define(
     "Category",
     {
       id: {
