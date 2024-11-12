@@ -21,7 +21,8 @@ router
     roleGuard("admin"),
     upload.single("icon"),
     categoryControllers.create
-  );
+  )
+  .get(categoryControllers.getAll);
 
 router
   .route("/:categoryId")
@@ -53,7 +54,6 @@ router
   .route("/sub/:subCategoryId/filters")
   .get(subCategoryControllers.getOneSubCategoryFilters);
 
-  
 //filters category routes
 router
   .route("/filters")

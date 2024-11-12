@@ -63,8 +63,12 @@ Category.belongsTo(Category, {
 });
 
 //category && subCategory
+//in has many as is model name in db if dont put them it is ok
+//in include query we must give as that is tablename
+//but in belongs to as is my field name 
 Category.hasMany(SubCategory, {
   foreignKey: "parent_id",
+  as: "subCategories",
   onDelete: "CASCADE",
 });
 

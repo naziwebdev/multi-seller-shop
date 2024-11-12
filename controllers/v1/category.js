@@ -1,4 +1,4 @@
-const { Category, FiltersCategory } = require("../../db");
+const { Category, FiltersCategory, SubCategory } = require("../../db");
 const {
   createCategoryValidator,
   editCategoryValidator,
@@ -139,3 +139,57 @@ exports.getOneCategoryFilters = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getAll = async (req, res, next) => {
+  try {
+    //point : as is the model name in tableName
+    const fetchSubcategoriesRecursively = async (parentId = null) => {
+
+      const subCategories = await SubCategory.findAll({
+        include: [
+          {
+            model: FiltersCategory,
+            as: "FiltersCategories",
+            
+          },
+        ],
+        where: { parent_id: parentId },
+      });
+
+      const parentSubCategories = await Category.findAll({
+        include: [
+          {
+            model: FiltersCategory,
+            as: "FiltersCategories",
+            
+          },
+        ],
+        where: { parent_id: parentId },
+      });
+
+  
+
+      let fetchedParentSubCategories = [];
+
+      for (const category of parentSubCategories) {
+         let categoryJSON = category.toJSON()
+        categoryJSON.subCategories = await fetchSubcategoriesRecursively(category.id)
+        fetchedParentSubCategories.push(categoryJSON);
+        
+      }
+
+    const subCategoriesJSON = subCategories.map(subCategory => subCategory.toJSON())
+      return [...fetchedParentSubCategories,...subCategoriesJSON];
+    } 
+
+      
+    const categories = await fetchSubcategoriesRecursively(null);
+
+    return res.status(200).json(categories);
+
+     
+    }catch (error) {
+    next(error);
+  }
+};
+
