@@ -1,6 +1,5 @@
 const { DataTypes } = require("sequelize");
 
-
 const FiltersCategory = (sequelize) => {
   return sequelize.define(
     "FiltersCategory",
@@ -49,6 +48,15 @@ const FiltersCategory = (sequelize) => {
     {
       tableName: "filters_categories",
       timestamps: false,
+      validate: {
+        atLeastOneRequired() {
+          if (!this.category_id && !this.subCategory_id) {
+            throw new Error(
+              "Either categoryId or subCategoryId must be provided."
+            );
+          }
+        },
+      },
     }
   );
 };
