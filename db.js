@@ -81,7 +81,7 @@ Category.hasMany(FiltersCategory, {
 
 FiltersCategory.belongsTo(Category, {
   foreignKey: "category_id",
-  as: "parent",
+  as: "category",
 });
 
 //filtersCategory & subCategory

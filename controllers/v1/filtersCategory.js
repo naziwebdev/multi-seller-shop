@@ -161,10 +161,3 @@ exports.remove = async (req, res, next) => {
     next(error);
   }
 };
-
-exports.getOneCategoryFilters = async (req, res, next) => {
-  try {
-  } catch (error) {
-    next(error);
-  }
-};

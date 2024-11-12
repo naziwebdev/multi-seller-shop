@@ -134,3 +134,11 @@ exports.remove = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getOneSubCategoryFilters = async (req, res, next) => {
+  try {
+    
+  } catch (error) {
+    next(error);
+  }
+};

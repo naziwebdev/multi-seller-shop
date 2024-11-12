@@ -33,6 +33,10 @@ router
   )
   .delete(auth, roleGuard("admin"), categoryControllers.remove);
 
+router
+  .route("/:categoryId/filters")
+  .get(categoryControllers.getOneCategoryFilters);
+
 //subCategory routes
 router
   .route("/sub")
@@ -45,7 +49,11 @@ router
   .delete(auth, roleGuard("admin"), subCategoryControllers.remove)
   .get(subCategoryControllers.getOne);
 
+router
+  .route("/sub/:subCategoryId/filters")
+  .get(subCategoryControllers.getOneSubCategoryFilters);
 
+  
 //filters category routes
 router
   .route("/filters")
