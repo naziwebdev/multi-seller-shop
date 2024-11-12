@@ -1,4 +1,4 @@
-const { ExclusionConstraintError } = require("sequelize");
+const { ExclusionConstraintError, where } = require("sequelize");
 const { FiltersCategory, Category, SubCategory } = require("../../db");
 const {
   createFilterCategoryValidator,
@@ -140,15 +140,30 @@ exports.edit = async (req, res, next) => {
 };
 exports.remove = async (req, res, next) => {
   try {
+    const { filterId } = req.params;
+    if (
+      filterId === undefined ||
+      filterId === null ||
+      filterId === "" ||
+      isNaN(filterId)
+    ) {
+      return res.status(422).json({ message: "filterId is not valid" });
+    }
+
+    const filter = await FiltersCategory.findOne({ where: { id: filterId } });
+    if (!filter) {
+      return res.status(404).json({ message: "not fount filter" });
+    }
+
+    await FiltersCategory.destroy({ where: { id: filterId } });
+    return res.status(200).json({ message: "filter removed successfully" });
   } catch (error) {
-  
     next(error);
   }
 };
 
 exports.getOneCategoryFilters = async (req, res, next) => {
   try {
-
   } catch (error) {
     next(error);
   }
