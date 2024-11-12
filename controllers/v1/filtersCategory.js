@@ -99,6 +99,8 @@ exports.edit = async (req, res, next) => {
     if (!filter) {
       return res.status(404).json({ message: "not fount filter" });
     }
+    let existCategoryParent = null;
+    let existSubCategoryParent = null;
 
     if (category_id) {
       existCategoryParent = await Category.findOne({
@@ -106,11 +108,14 @@ exports.edit = async (req, res, next) => {
       });
     }
 
+
     if (subCategory_id) {
       existSubCategoryParent = await SubCategory.findOne({
         where: { id: subCategory_id },
       });
     }
+
+
 
     if (!existCategoryParent && !existSubCategoryParent) {
       return res.status(400).json({

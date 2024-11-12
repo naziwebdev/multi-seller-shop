@@ -1,4 +1,4 @@
-const { SubCategory, Category } = require("../../db");
+const { SubCategory, Category ,FiltersCategory} = require("../../db");
 const {
   createSubCategoryValidator,
   editSubCategoryValidator,
@@ -137,7 +137,42 @@ exports.remove = async (req, res, next) => {
 
 exports.getOneSubCategoryFilters = async (req, res, next) => {
   try {
+    const { subCategoryId } = req.params;
+
+    if (
+      subCategoryId === undefined ||
+      subCategoryId === null ||
+      subCategoryId === "" ||
+      isNaN(subCategoryId)
+    ) {
+      return res.status(422).json({ message: "subCategoryId is not valid" });
+    }
+
+    const subCategory = await SubCategory.findOne({ where: { id:subCategoryId } });
+    if (!subCategory) {
+      return res.status(404).json({ message: "not found subCategory" });
+    }
+
+    const filters = await FiltersCategory.findAll({
+      where: { subCategory_id: subCategoryId },
+      include: [{ model: SubCategory, as: "subCategory" }],
+    });
+
+    //as in include must be same as that is in associate 
     
+    if (!filters) {
+      return res
+        .status(404)
+        .json({ message: "not found filters for this subCategory" });
+    }
+
+    filters.forEach((filter) => {
+      if (filter.options) {
+        filter.options = JSON.parse(filter.options);
+      }
+    });
+
+    return res.status(200).json(filters);
   } catch (error) {
     next(error);
   }

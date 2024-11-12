@@ -118,7 +118,7 @@ exports.getOneCategoryFilters = async (req, res, next) => {
 
     const filters = await FiltersCategory.findAll({
       where: { category_id: categoryId },
-      include: [{ model: Category , as:"category"}], 
+      include: [{ model: Category, as: "category" }],
     });
     if (!filters) {
       return res
@@ -131,7 +131,7 @@ exports.getOneCategoryFilters = async (req, res, next) => {
         filter.options = JSON.parse(filter.options);
       }
 
-      filter.category.icon = JSON.parse(filter.category.icon)
+      filter.category.icon = JSON.parse(filter.category.icon);
     });
 
     return res.status(200).json(filters);
