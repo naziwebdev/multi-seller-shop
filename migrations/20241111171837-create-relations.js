@@ -96,6 +96,25 @@ module.exports = {
         onDelete: "CASCADE",
       });
 
+      await queryInterface.addColumn("seller_requests", "seller_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: true,
+        references: {
+          model: "sellers",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+      await queryInterface.addColumn("seller_requests", "product_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: true,
+        references: {
+          model: "products",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
@@ -116,6 +135,8 @@ module.exports = {
       await queryInterface.removeColumn("sellers_product", "seller_id");
       await queryInterface.removeColumn("sellers_product", "product_id");
       await queryInterface.removeColumn("products", "subCategory_id");
+      await queryInterface.removeColumn("seller_requests", "seller_id");
+      await queryInterface.removeColumn("seller_requests", "product_id");
 
       await transaction.commit();
     } catch (error) {

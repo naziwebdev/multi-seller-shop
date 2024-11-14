@@ -30,6 +30,8 @@ const FiltersCategory = require("./models/FiltersCategory")(db);
 const Product = require("./models/Product")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const SellersProduct = require("./models/Sellersproduct")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const SellerRequest = require("./models/SellerRequest")(db);
 
 //Associations
 
@@ -128,6 +130,28 @@ Product.belongsTo(SubCategory, {
   as: "subCategory",
 });
 
+//sellerRequest && seller
+Seller.hasMany(SellerRequest, {
+  foreignKey: "seller_id",
+  onDelete: "CASCADE",
+});
+
+SellerRequest.belongsTo(Seller, {
+  foreignKey: "seller_id",
+  as: "seller",
+});
+
+//sellerRequest & product
+Product.hasMany(SellerRequest, {
+  foreignKey: "product_id",
+  onDelete: "CASCADE",
+});
+
+SellerRequest.belongsTo(Product, {
+  foreignKey: "product_id",
+  as: "product",
+});
+
 module.exports = {
   db,
   User,
@@ -137,4 +161,7 @@ module.exports = {
   Category,
   SubCategory,
   FiltersCategory,
+  Product,
+  SellersProduct,
+  SellerRequest,
 };

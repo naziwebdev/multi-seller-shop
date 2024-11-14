@@ -18,7 +18,7 @@ const SellersProduct = (sequelize) => {
         allowNull: false,
       },
       stock: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
