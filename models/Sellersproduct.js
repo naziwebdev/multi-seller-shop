@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 
-//seller_id & product_id are relations column in this model
+//seller_id & product_id are relations many-to-many betweeen seller & product model
+//and create a seperate table (sellersproduct) for many-to-many relations
 
 const SellersProduct = (sequelize) => {
   return sequelize.define(

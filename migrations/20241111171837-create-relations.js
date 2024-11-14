@@ -48,7 +48,7 @@ module.exports = {
 
       await queryInterface.addColumn("filters_categories", "category_id", {
         type: Sequelize.INTEGER.UNSIGNED,
-        allowNull:true,
+        allowNull: true,
         references: {
           model: "categories",
           key: "id",
@@ -57,6 +57,36 @@ module.exports = {
       });
 
       await queryInterface.addColumn("filters_categories", "subCategory_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: true,
+        references: {
+          model: "sub_categories",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
+      await queryInterface.addColumn("sellers_product", "seller_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: true,
+        references: {
+          model: "sellers",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
+      await queryInterface.addColumn("sellers_product", "product_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: true,
+        references: {
+          model: "products",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
+      await queryInterface.addColumn("products", "subCategory_id", {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: true,
         references: {
@@ -82,10 +112,10 @@ module.exports = {
       await queryInterface.removeColumn("categories", "parent_id");
       await queryInterface.removeColumn("sub_categories", "parent_id");
       await queryInterface.removeColumn("filters_categories", "category_id");
-      await queryInterface.removeColumn(
-        "filters_categories",
-        "subCategory_id"
-      );
+      await queryInterface.removeColumn("filters_categories", "subCategory_id");
+      await queryInterface.removeColumn("sellers_product", "seller_id");
+      await queryInterface.removeColumn("sellers_product", "product_id");
+      await queryInterface.removeColumn("products", "subCategory_id");
 
       await transaction.commit();
     } catch (error) {

@@ -26,6 +26,10 @@ const Category = require("./models/category")(db);
 const SubCategory = require("./models/Subcategory")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const FiltersCategory = require("./models/FiltersCategory")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Product = require("./models/Product")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const SellersProduct = require("./models/Sellersproduct")(db);
 
 //Associations
 
@@ -65,7 +69,7 @@ Category.belongsTo(Category, {
 //category && subCategory
 //in has many as is model name in db if dont put them it is ok
 //in include query we must give as that is tablename
-//but in belongs to as is my field name 
+//but in belongs to as is my field name
 Category.hasMany(SubCategory, {
   foreignKey: "parent_id",
   as: "subCategories",
@@ -99,4 +103,38 @@ FiltersCategory.belongsTo(SubCategory, {
   as: "subCategory",
 });
 
-module.exports = { db, User, Address, Ban, Seller, Category, SubCategory ,FiltersCategory};
+//product (many-to-many) seller => need separate table(SellersProduct)
+
+Product.belongsToMany(Seller, {
+  through: SellersProduct,
+  onDelete: "CASCADE",
+  foreignKey: "product_id",
+});
+
+Seller.belongsToMany(Product, {
+  through: SellersProduct,
+  onDelete: "CASCADE",
+  foreignKey: "seller_id",
+});
+
+//product && subCategory
+SubCategory.hasMany(Product, {
+  foreignKey: "subCategory_id",
+  onDelete: "CASCADE",
+});
+
+Product.belongsTo(SubCategory, {
+  foreignKey: "subCategory_id",
+  as: "subCategory",
+});
+
+module.exports = {
+  db,
+  User,
+  Address,
+  Ban,
+  Seller,
+  Category,
+  SubCategory,
+  FiltersCategory,
+};
