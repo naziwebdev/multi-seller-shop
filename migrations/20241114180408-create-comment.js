@@ -1,28 +1,21 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('seller_requests', {
+    await queryInterface.createTable("comments", {
       id: {
-        type:Sequelize.INTEGER.UNSIGNED,
+        type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
       },
-      price: {
-        type:Sequelize.INTEGER.UNSIGNED,
+      content: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
-      stock: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      status: {
-        type: Sequelize.ENUM("pendding", "rejected", "accepted"),
-        defaultValue: "pendding",
-      },
-      adminComment: {
-        type:Sequelize.STRING
+      rating: {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: true,
       },
       created_at: {
         allowNull: false,
@@ -37,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('seller_requests');
-  }
+    await queryInterface.dropTable("comments");
+  },
 };

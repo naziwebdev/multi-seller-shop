@@ -21,7 +21,7 @@ const SellerRequest = (sequelize) => {
       },
       status: {
         type: DataTypes.ENUM("pendding", "rejected", "accepted"),
-        defaultValue: "pennding",
+        defaultValue: "pendding",
       },
       adminComment: {
         type: DataTypes.STRING,

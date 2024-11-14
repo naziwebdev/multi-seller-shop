@@ -32,6 +32,10 @@ const Product = require("./models/Product")(db);
 const SellersProduct = require("./models/Sellersproduct")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const SellerRequest = require("./models/SellerRequest")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Comment = require("./models/Comment")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Reply = require("./models/Reply")(db);
 
 //Associations
 
@@ -152,6 +156,61 @@ SellerRequest.belongsTo(Product, {
   as: "product",
 });
 
+// comment & user
+User.hasMany(Comment, {
+  foreignKey: "user_id",
+  onDelete: "CASCADE",
+});
+
+Comment.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+//comment & product
+Product.hasMany(Comment, {
+  foreignKey: "product_id",
+  onDelete: "CASCADE",
+});
+
+Comment.belongsTo(Product, {
+  foreignKey: "product_id",
+  as: "product",
+});
+
+//reply && user
+User.hasMany(Reply, {
+  foreignKey: "user_id",
+  onDelete: "CASCADE",
+});
+
+Reply.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+//reply & comment
+Comment.hasMany(Reply, {
+  foreignKey: "comment_id",
+  onDelete: "CASCADE",
+});
+
+Reply.belongsTo(Comment, {
+  foreignKey: "comment_id",
+  as: "comment",
+});
+
+//reply && reply
+Reply.hasMany(Reply, {
+  foreignKey: "parentReply_id",
+  onDelete: "CASCADE",
+});
+
+Reply.belongsTo(Reply, {
+  foreignKey: "parentReply_id",
+  as: "parentReply",
+});
+
 module.exports = {
   db,
   User,
@@ -164,4 +223,6 @@ module.exports = {
   Product,
   SellersProduct,
   SellerRequest,
+  Comment,
+  Reply,
 };
