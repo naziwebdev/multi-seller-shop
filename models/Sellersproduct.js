@@ -1,11 +1,10 @@
 const { DataTypes } = require("sequelize");
 
+//seller_id & product_id are relations column in this model
 
-//parent_id have a relation to category model
-
-const SubCategory = (sequelize) => {
+const SellersProduct = (sequelize) => {
   return sequelize.define(
-    "SubCategory",
+    "SellersProduct",
     {
       id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -13,24 +12,20 @@ const SubCategory = (sequelize) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      title: {
-        type: DataTypes.STRING,
+      price: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
       },
-      slug: {
-        type: DataTypes.STRING,
+      stock: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
-        unique: true,
-      },
-      description: {
-        type: DataTypes.STRING,
       },
     },
     {
-      tableName: "sub_categories",
+      tableName: "sellers_product",
       timestamps: false,
     }
   );
 };
 
-module.exports = SubCategory;
+module.exports = SellersProduct;
