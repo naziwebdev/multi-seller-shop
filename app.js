@@ -9,6 +9,7 @@ const locationRouter = require("./routes/v1/location");
 const sellerRouter = require("./routes/v1/seller");
 const categoryRouter = require("./routes/v1/category");
 const productRouter = require("./routes/v1/product");
+const sellerRequestRouter = require('./routes/v1/sellerRequest')
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/api/v1/locations", locationRouter);
 app.use("/api/v1/seller", sellerRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/products", productRouter);
+app.use("/api/v1/seller-requests", sellerRequestRouter);
 
 //404 not found path
 app.use((req, res) => {

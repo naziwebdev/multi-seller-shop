@@ -97,12 +97,12 @@ exports.edit = async (req, res, next) => {
       productId === "" ||
       isNaN(productId)
     ) {
-      return res.status.status(422).json({ message: "productId is not valid" });
+      return res.status(422).json({ message: "productId is not valid" });
     }
 
     const product = await Product.findOne({ where: { id: productId } });
     if (!product) {
-      return res.status.status(404).json({ message: "product not found" });
+      return res.status(404).json({ message: "product not found" });
     }
 
     let images = [];
@@ -159,8 +159,9 @@ exports.getOne = async (req, res, next) => {
 };
 exports.remove = async (req, res, next) => {
   try {
+    //!!TODO : remove seller of product too
     let { productId } = req.params;
-    productId = parseInt(productId)
+  
   
     if (
       productId === undefined ||
