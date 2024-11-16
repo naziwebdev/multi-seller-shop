@@ -5,6 +5,8 @@ const {
   editProductValidator,
 } = require("../../validators/product");
 
+const fs = require("fs");
+
 exports.create = async (req, res, next) => {
   try {
     let {
@@ -35,8 +37,8 @@ exports.create = async (req, res, next) => {
         const pathFile = `images/products/${file.filename}`;
         images.push(pathFile);
       }
-    }else{
-      return res.status(400).json({message:'images is required'})
+    } else {
+      return res.status(400).json({ message: "images is required" });
     }
 
     const existSubCategory = await SubCategory.findOne({
@@ -112,10 +114,9 @@ exports.edit = async (req, res, next) => {
         const pathFile = `images/products/${file.filename}`;
         images.push(pathFile);
       }
-    }else{
-      return res.status(400).json({message:'images is required'})
+    } else {
+      return res.status(400).json({ message: "images is required" });
     }
-
 
     if (subCategory_id) {
       const existSubCategory = await SubCategory.findOne({
@@ -134,7 +135,7 @@ exports.edit = async (req, res, next) => {
         filtersValue,
         customFilters,
         subCategory_id,
-        images
+        images,
       },
       { where: { id: productId } }
     );
@@ -158,6 +159,30 @@ exports.getOne = async (req, res, next) => {
 };
 exports.remove = async (req, res, next) => {
   try {
+    let { productId } = req.params;
+    productId = parseInt(productId)
+  
+    if (
+      productId === undefined ||
+      productId === null ||
+      productId === "" ||
+      isNaN(productId)
+    ) {
+      return res.status(422).json({ message: "productId is not valid" });
+    }
+    const product = await Product.findOne({ where: { id: productId } });
+    if (!product) {
+      return res.status(404).json({ message: "product not found" });
+    }
+
+    images = JSON.parse(product.images);
+    images.map((img) => {
+      fs.unlink(`public/${img}`,(err) => next(err));
+    });
+
+    await Product.destroy({ where: { id: productId } });
+
+    return res.status(200).json({ message: "product deleted successfully" });
   } catch (error) {
     next(error);
   }
