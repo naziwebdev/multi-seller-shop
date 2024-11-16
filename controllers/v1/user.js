@@ -50,7 +50,7 @@ exports.createAddress = async (req, res, next) => {
       address,
       location,
       cityId,
-    });
+    }, { abortEarly: false });
 
     const isValidCityId = citis.find((city) => +city.id === +cityId);
     if (!isValidCityId) {
@@ -93,7 +93,7 @@ exports.updateAddress = async (req, res, next) => {
       address,
       location,
       cityId,
-    });
+    }, { abortEarly: false });
 
     const isValidCityId = citis.find((city) => +city.id === +cityId);
     if (!isValidCityId) {

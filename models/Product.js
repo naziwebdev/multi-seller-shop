@@ -1,10 +1,10 @@
 const { DataTypes } = require("sequelize");
-const { db } = require("../db");
+
 
 // subategory_id  is relations column
 
 const Product = (sequelize) => {
-  return db.define(
+  return sequelize.define(
     "Product",
     {
       id: {

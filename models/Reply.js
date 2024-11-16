@@ -1,4 +1,3 @@
-const { db } = require("../db");
 const { DataTypes } = require("sequelize");
 
 //user_id & comment_id & parentReply are  relations column

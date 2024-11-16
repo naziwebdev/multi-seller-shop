@@ -44,7 +44,7 @@ exports.create = async (req, res, next) => {
   try {
     const { title, slug, description, parent_id } = req.body;
 
-    await createSubCategoryValidator.validate(req.body);
+    await createSubCategoryValidator.validate(req.body, { abortEarly: false });
 
     const parentCheck = await Category.findOne({ where: { id: parent_id } });
     if (!parentCheck) {
@@ -80,7 +80,7 @@ exports.edit = async (req, res, next) => {
       return res.status(422).json({ message: "subCategoryId is not valid" });
     }
 
-    await editSubCategoryValidator.validate(req.body);
+    await editSubCategoryValidator.validate(req.body, { abortEarly: false });
     const parentCheck = await Category.findOne({ where: { id: parent_id } });
     if (!parentCheck) {
       return res.status(404).json({ message: "parent_id is not valid" });

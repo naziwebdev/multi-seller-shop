@@ -10,7 +10,7 @@ exports.create = async (req, res, next) => {
     const user = req.user;
     const { name, contactDetails, cityId } = req.body;
 
-    await createSellerValidator.validate({ name, contactDetails, cityId });
+    await createSellerValidator.validate({ name, contactDetails, cityId }, { abortEarly: false });
 
     const isValidCityId = cities.find((city) => +city.id === +cityId);
     if (!isValidCityId) {
@@ -35,7 +35,7 @@ exports.update = async (req, res, next) => {
     const user = req.user;
     const { name, contactDetails, cityId } = req.body;
 
-    await updateSellerValidator.validate({ name, contactDetails, cityId });
+    await updateSellerValidator.validate({ name, contactDetails, cityId }, { abortEarly: false });
 
     const isValidCityId = cities.find((city) => +city.id === +cityId);
     if (!isValidCityId) {

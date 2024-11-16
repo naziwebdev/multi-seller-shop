@@ -8,7 +8,7 @@ exports.create = async (req, res, next) => {
   try {
     const { title, slug, description, parent_id } = req.body;
 
-    await createCategoryValidator.validate(req.body);
+    await createCategoryValidator.validate(req.body, { abortEarly: false });
 
     let icon = null;
     if (!req.file.filename) {
@@ -48,7 +48,7 @@ exports.edit = async (req, res, next) => {
       return res.status(422).json({ message: "categoryId is not valid" });
     }
 
-    await editCategoryValidator.validate(req.body);
+    await editCategoryValidator.validate(req.body, { abortEarly: false });
 
     const category = await Category.findOne({ where: { id: categoryId } });
     if (!category) {

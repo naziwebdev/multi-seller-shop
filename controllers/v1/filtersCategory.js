@@ -19,7 +19,7 @@ exports.create = async (req, res, next) => {
       subCategory_id,
     } = req.body;
 
-    await createFilterCategoryValidator.validate(req.body);
+    await createFilterCategoryValidator.validate(req.body, { abortEarly: false });
 
     const filter = await FiltersCategory.findOne({ where: { slug } });
     if (filter) {
@@ -93,7 +93,7 @@ exports.edit = async (req, res, next) => {
       return res.status(422).json({ message: "filterId is not valid" });
     }
 
-    await editFilterCategoryValidator.validate(req.body);
+    await editFilterCategoryValidator.validate(req.body, { abortEarly: false });
 
     const filter = await FiltersCategory.findOne({ where: { id: filterId } });
     if (!filter) {
