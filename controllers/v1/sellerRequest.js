@@ -3,6 +3,7 @@ const {
   createSellerRequestValidator,
   updateSellerRequestValidator,
 } = require("../../validators/sellerRequest");
+const { createPaginationData } = require("../../utils/paginationData");
 
 exports.create = async (req, res, next) => {
   try {
@@ -31,7 +32,7 @@ exports.create = async (req, res, next) => {
       return res.status(400).json({ message: "your request already exist" });
     }
 
-    const result = await SellerRequest.create({
+    await SellerRequest.create({
       price,
       stock,
       product_id,
@@ -46,6 +47,33 @@ exports.create = async (req, res, next) => {
 };
 exports.getAllSellerRequests = async (req, res, next) => {
   try {
+    const seller = req.user;
+    const { limit = 4, page = 1 } = req.query;
+
+    const existSeller = await Seller.findOne({ where: { id: seller.id } });
+    if (!existSeller) {
+      return res.status(404).json({ message: "not found seller" });
+    }
+
+    const offset = (page - 1) * limit;
+    const sellerRequests = await SellerRequest.findAll({
+      offset: +offset,
+      limit: +limit,
+      where: { seller_id: seller.id },
+      order: [["created_at", "DESC"]],
+    });
+
+    const totalRequests = await SellerRequest.count();
+
+    return res.status(200).json({
+      sellerRequests,
+      pagination: createPaginationData(
+        page,
+        limit,
+        totalRequests,
+        "SellerRequests"
+      ),
+    });
   } catch (error) {
     next(error);
   }
