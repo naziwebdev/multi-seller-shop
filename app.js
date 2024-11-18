@@ -12,6 +12,7 @@ const productRouter = require("./routes/v1/product");
 const sellerRequestRouter = require("./routes/v1/sellerRequest");
 const commentRouter = require("./routes/v1/comment");
 const { redirectToProduct } = require("./controllers/v1/shortLink");
+const {errorHandler} = require('./middlewares/errorHandler')
 
 const app = express();
 
@@ -45,5 +46,7 @@ app.use((req, res) => {
 
   return res.status(404).json({ message: "404 ! not fount the path" });
 });
+
+app.use(errorHandler)
 
 module.exports = app;
