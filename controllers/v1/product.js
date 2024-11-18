@@ -180,6 +180,35 @@ exports.getAll = async (req, res, next) => {
 };
 exports.getOne = async (req, res, next) => {
   try {
+    let { productId } = req.params;
+
+    if (
+      productId === undefined ||
+      productId === null ||
+      productId === "" ||
+      isNaN(productId)
+    ) {
+      return res.status(422).json({ message: "productId is not valid" });
+    }
+
+    const product = await Product.findOne({
+      include: [
+        {
+          model: Seller,
+          as: "Sellers",
+        },
+      ],
+      where: { id: productId },
+    });
+
+    if (!product) {
+      return res.status(404).json({ message: "not found product" });
+    }
+    product.images = JSON.parse(product.images);
+    product.filtersValue = JSON.parse(product.filtersValue);
+    product.customFilters = JSON.parse(product.customFilters);
+
+    return res.status(200).json(product);
   } catch (error) {
     next(error);
   }
