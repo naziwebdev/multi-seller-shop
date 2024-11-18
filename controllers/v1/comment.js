@@ -99,7 +99,7 @@ exports.addReply = async (req, res, next) => {
       return res.status(422).json({ message: "commentId is not valid" });
     }
 
-    await editReplyValidator.validate(req.body, { abortEarly: false });
+    await createReplyValidator.validate(req.body, { abortEarly: false });
 
     const comment = await Comment.findOne({ where: { id: commentId } });
     if (!comment) {
@@ -128,6 +128,41 @@ exports.addReply = async (req, res, next) => {
 };
 exports.editReply = async (req, res, next) => {
   try {
+    const { commentId, replyId } = req.params;
+    const { content } = req.body;
+
+    if (
+      commentId === undefined ||
+      commentId === null ||
+      commentId === "" ||
+      isNaN(commentId)
+    ) {
+      return res.status(422).json({ message: "commentId is not valid" });
+    }
+    if (
+      replyId === undefined ||
+      replyId === null ||
+      replyId === "" ||
+      isNaN(replyId)
+    ) {
+      return res.status(422).json({ message: "replyId is not valid" });
+    }
+
+    await editReplyValidator.validate(req.body, { abortEarly: false });
+
+    const comment = await Comment.findOne({ where: { id: commentId } });
+    if (!comment) {
+      return res.status(404).json({ message: "not found comment" });
+    }
+
+    const reply = await Reply.findOne({ where: { id: replyId } });
+    if (!reply) {
+      return res.status(404).json({ message: "not found reply" });
+    }
+
+    await Reply.update({ content }, { where: { id: replyId } });
+
+    return res.status(200).json({ message: "reply updated successfully" });
   } catch (error) {
     next(error);
   }

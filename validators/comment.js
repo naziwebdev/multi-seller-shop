@@ -37,7 +37,6 @@ const createReplyValidator = yup.object().shape({
 
 const editReplyValidator = yup.object().shape({
   content: yup.string().min(3, "content must be min 3 char"),
-  parentReply_id: yup.number().integer().positive(),
 });
 
 module.exports = {
