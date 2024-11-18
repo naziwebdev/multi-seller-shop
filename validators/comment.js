@@ -18,6 +18,16 @@ const createCommentValidator = yup.object().shape({
     .required("product_id is required"),
 });
 
+const editCommentValidator = yup.object().shape({
+  content: yup
+    .string()
+    .min(3, "content must be min 3 char"),
+  rating: yup
+    .number()
+    .positive()
+    .min(1, "min rate is 1")
+    .max(5, "max rate is 5"),
+});
 
 
-module.exports = {createCommentValidator}
+module.exports = {createCommentValidator,editCommentValidator}
