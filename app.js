@@ -11,6 +11,7 @@ const categoryRouter = require("./routes/v1/category");
 const productRouter = require("./routes/v1/product");
 const sellerRequestRouter = require("./routes/v1/sellerRequest");
 const commentRouter = require("./routes/v1/comment");
+const { redirectToProduct } = require("./controllers/v1/shortLink");
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/seller-requests", sellerRequestRouter);
 app.use("/api/v1/comments", commentRouter);
+app.get("/p/:shortIdentifier", redirectToProduct);
 
 //404 not found path
 app.use((req, res) => {
