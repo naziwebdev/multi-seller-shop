@@ -169,6 +169,38 @@ exports.editReply = async (req, res, next) => {
 };
 exports.removeReply = async (req, res, next) => {
   try {
+    const { commentId, replyId } = req.params;
+
+    if (
+      commentId === undefined ||
+      commentId === null ||
+      commentId === "" ||
+      isNaN(commentId)
+    ) {
+      return res.status(422).json({ message: "commentId is not valid" });
+    }
+    if (
+      replyId === undefined ||
+      replyId === null ||
+      replyId === "" ||
+      isNaN(replyId)
+    ) {
+      return res.status(422).json({ message: "replyId is not valid" });
+    }
+
+
+    const comment = await Comment.findOne({ where: { id: commentId } });
+    if (!comment) {
+      return res.status(404).json({ message: "not found comment" });
+    }
+
+    const reply = await Reply.findOne({ where: { id: replyId } });
+    if (!reply) {
+      return res.status(404).json({ message: "not found reply" });
+    }
+
+    await Reply.destroy({ where: { id: replyId } });
+    return res.status(200).json({ message: "reply removed successfullly" });
   } catch (error) {
     next(error);
   }
