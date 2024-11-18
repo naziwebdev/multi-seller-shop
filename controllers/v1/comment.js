@@ -60,6 +60,25 @@ exports.editComment = async (req, res, next) => {
 };
 exports.removeComment = async (req, res, next) => {
   try {
+    const { commentId } = req.params;
+
+    if (
+      commentId === undefined ||
+      commentId === null ||
+      commentId === "" ||
+      isNaN(commentId)
+    ) {
+      return res.status(422).json({ message: "commentId is not valid" });
+    }
+
+    const comment = await Comment.findOne({ where: { id: commentId } });
+    if (!comment) {
+      return res.status(404).json({ message: "not found comment" });
+    }
+
+    await Comment.destroy({ where: { id: commentId } });
+
+    return res.status(200).json({ message: "comment removed successfully" });
   } catch (error) {
     next(error);
   }
