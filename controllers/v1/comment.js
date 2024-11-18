@@ -1,4 +1,4 @@
-const { Comment, Reply, Product } = require("../../db");
+const { Comment, Reply, Product, User } = require("../../db");
 const {
   createCommentValidator,
   editCommentValidator,
@@ -25,6 +25,50 @@ exports.createComment = async (req, res, next) => {
 };
 exports.getComments = async (req, res, next) => {
   try {
+    const { productId } = req.query;
+
+    const comments = await Comment.findAll({
+      include: [
+        {
+          model: Reply,
+          as: "Replies",
+        },
+        {
+          model: User,
+          as: "user",
+        },
+      ],
+
+      where: { product_id: productId },
+    });
+
+    const processReplies = (replies) => {
+      const replyMap = new Map(
+        replies.map((reply) => [reply.id, reply.dataValues])
+      );
+      const topLevelReplies = [];
+      replies.forEach((reply) => {
+        const replyData = reply.dataValues;
+        if (replyData.parentReply_id === null) {
+          topLevelReplies.push(replyData);
+        } else {
+          const parentReply = replyMap.get(replyData.parentReply_id);
+          if (parentReply) {
+            if (!parentReply.replies) {
+              parentReply.replies = [];
+            }
+            parentReply.replies.push(replyData);
+          }
+        }
+      });
+      return topLevelReplies;
+    };
+    const processedComments = comments.map((comment) => {
+      const commentData = comment.toJSON();
+      commentData.Replies = processReplies(comment.Replies);
+      return commentData;
+    });
+    return res.status(200).json(processedComments);
   } catch (error) {
     next(error);
   }
@@ -187,7 +231,6 @@ exports.removeReply = async (req, res, next) => {
     ) {
       return res.status(422).json({ message: "replyId is not valid" });
     }
-
 
     const comment = await Comment.findOne({ where: { id: commentId } });
     if (!comment) {
