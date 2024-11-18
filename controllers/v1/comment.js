@@ -2,6 +2,8 @@ const { Comment, Reply, Product } = require("../../db");
 const {
   createCommentValidator,
   editCommentValidator,
+  createReplyValidator,
+  editReplyValidator,
 } = require("../../validators/comment");
 
 exports.createComment = async (req, res, next) => {
@@ -85,6 +87,41 @@ exports.removeComment = async (req, res, next) => {
 };
 exports.addReply = async (req, res, next) => {
   try {
+    const { commentId } = req.params;
+    const { content, parentReply_id } = req.body;
+
+    if (
+      commentId === undefined ||
+      commentId === null ||
+      commentId === "" ||
+      isNaN(commentId)
+    ) {
+      return res.status(422).json({ message: "commentId is not valid" });
+    }
+
+    await editReplyValidator.validate(req.body, { abortEarly: false });
+
+    const comment = await Comment.findOne({ where: { id: commentId } });
+    if (!comment) {
+      return res.status(404).json({ message: "not found comment" });
+    }
+    if (parentReply_id) {
+      const reply = await Reply.findOne({ where: { id: parentReply_id } });
+      if (!reply) {
+        return res.status(404).json({ message: "not found reply" });
+      }
+    }
+
+    await Reply.create({
+      content,
+      comment_id: commentId,
+      user_id: req.user.id,
+      parentReply_id,
+    });
+
+    return res
+      .status(201)
+      .json({ message: "reply comment created successfully" });
   } catch (error) {
     next(error);
   }

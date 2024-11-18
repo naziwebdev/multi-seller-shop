@@ -19,9 +19,7 @@ const createCommentValidator = yup.object().shape({
 });
 
 const editCommentValidator = yup.object().shape({
-  content: yup
-    .string()
-    .min(3, "content must be min 3 char"),
+  content: yup.string().min(3, "content must be min 3 char"),
   rating: yup
     .number()
     .positive()
@@ -29,5 +27,22 @@ const editCommentValidator = yup.object().shape({
     .max(5, "max rate is 5"),
 });
 
+const createReplyValidator = yup.object().shape({
+  content: yup
+    .string()
+    .min(3, "content must be min 3 char")
+    .required("content is required"),
+  parentReply_id: yup.number().integer().positive(),
+});
 
-module.exports = {createCommentValidator,editCommentValidator}
+const editReplyValidator = yup.object().shape({
+  content: yup.string().min(3, "content must be min 3 char"),
+  parentReply_id: yup.number().integer().positive(),
+});
+
+module.exports = {
+  createCommentValidator,
+  editCommentValidator,
+  createReplyValidator,
+  editReplyValidator,
+};
