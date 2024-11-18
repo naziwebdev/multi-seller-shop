@@ -1,10 +1,11 @@
 const { v4: uuidv4 } = require("uuid");
-const { Product, SellersProduct, SubCategory } = require("../../db");
+const { Product, Seller, SubCategory } = require("../../db");
 const {
   createProductValidator,
   editProductValidator,
 } = require("../../validators/product");
 
+const { createPaginationData } = require("../../utils/paginationData");
 const fs = require("fs");
 
 exports.create = async (req, res, next) => {
@@ -147,6 +148,32 @@ exports.edit = async (req, res, next) => {
 };
 exports.getAll = async (req, res, next) => {
   try {
+    const { page = 1, limit = 1 } = req.query;
+    const offset = (page - 1) * limit;
+
+    const products = await Product.findAll({
+      include: [
+        {
+          model: Seller,
+          as: "Sellers",
+        },
+      ],
+      offset: +offset,
+      limit: +limit,
+    });
+
+    products.forEach((product) => {
+      product.images = JSON.parse(product.images);
+      product.filtersValue = JSON.parse(product.filtersValue);
+      product.customFilters = JSON.parse(product.customFilters);
+    });
+
+    const totalProducts = await Product.count();
+
+    return res.status(200).json({
+      products,
+      pagination: createPaginationData(page, limit, totalProducts, "products"),
+    });
   } catch (error) {
     next(error);
   }
@@ -159,10 +186,8 @@ exports.getOne = async (req, res, next) => {
 };
 exports.remove = async (req, res, next) => {
   try {
-    //!!TODO : remove seller of product too
     let { productId } = req.params;
-  
-  
+
     if (
       productId === undefined ||
       productId === null ||
@@ -178,7 +203,7 @@ exports.remove = async (req, res, next) => {
 
     images = JSON.parse(product.images);
     images.map((img) => {
-      fs.unlink(`public/${img}`,(err) => next(err));
+      fs.unlink(`public/${img}`, (err) => next(err));
     });
 
     await Product.destroy({ where: { id: productId } });
