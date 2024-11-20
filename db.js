@@ -42,6 +42,8 @@ const Cart = require("./models/Cart")(db);
 const CartItem = require("./models/CartItem")(db);
 const Checkout = require("./models/Checkout")(db);
 const CheckoutItem = require("./models/CheckoutItem")(db);
+const Order = require("./models/Order")(db);
+const OrderItem = require("./models/OrderItem")(db);
 
 //Associations
 
@@ -307,6 +309,51 @@ CheckoutItem.belongsTo(Seller, {
   as: "seller",
 });
 
+//order & user
+User.hasOne(Order, {
+  foreignKey: "user_id",
+  onDelete: "CASCADE",
+});
+
+Order.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+// order & order_item
+Order.hasMany(OrderItem, {
+  foreignKey: "order_id",
+  onDelete: "CASCADE",
+  as: "items",
+});
+
+OrderItem.belongsTo(Order, {
+  foreignKey: "order_id",
+  as: "order",
+});
+
+//orderItem & product
+Product.hasMany(OrderItem, {
+  foreignKey: "product_id",
+  onDelete: "CASCADE",
+});
+
+OrderItem.belongsTo(Product, {
+  foreignKey: "product_id",
+  as: "product",
+});
+
+//orderItem & seller
+Seller.hasMany(OrderItem, {
+  foreignKey: "seller_id",
+  onDelete: "CASCADE",
+});
+
+OrderItem.belongsTo(Seller, {
+  foreignKey: "seller_id",
+  as: "seller",
+});
+
 //point:
 //we can put as for both associations => exmple: producs as "cartItems" & cartItems as "product"
 //if we dont put as for one of side the assiciate its as in include finds be own models name but if put as in associte , as in include be as in associate
@@ -329,4 +376,6 @@ module.exports = {
   CartItem,
   Checkout,
   CheckoutItem,
+  Order,
+  OrderItem,
 };
