@@ -1,10 +1,9 @@
 const { DataTypes } = require("sequelize");
-const { db } = require("../db");
 
 //user_id & cartItem_id (as items) => column relations
 
 const Cart = (sequelize) => {
-  return db.define(
+  return sequelize.define(
     "Cart",
     {
       id: {
@@ -16,6 +15,7 @@ const Cart = (sequelize) => {
     },
     {
       tableName: "carts",
+      timestamps: true,
       createdAt: "created_at",
       updatedAt: "updated_at",
       getterMethods: {
