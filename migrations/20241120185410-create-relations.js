@@ -245,6 +245,47 @@ module.exports = {
         onDelete: "CASCADE",
       });
 
+      ////
+      await queryInterface.addColumn("orders", "user_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
+      await queryInterface.addColumn("order_items", "product_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: "products",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
+      await queryInterface.addColumn("order_items", "seller_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: "sellers",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
+      await queryInterface.addColumn("order_items", "order_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull: false,
+        references: {
+          model: "orders",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
@@ -280,6 +321,10 @@ module.exports = {
       await queryInterface.removeColumn("checkout_items", "product_id");
       await queryInterface.removeColumn("checkout_items", "seller_id");
       await queryInterface.removeColumn("checkout_items", "checkout_id");
+      await queryInterface.removeColumn("orders", "user_id");
+      await queryInterface.removeColumn("order_items", "product_id");
+      await queryInterface.removeColumn("order_items", "seller_id");
+      await queryInterface.removeColumn("order_items", "order_id");
 
       await transaction.commit();
     } catch (error) {
