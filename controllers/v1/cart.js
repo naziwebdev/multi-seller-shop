@@ -1,4 +1,4 @@
-const { Cart } = require("../../db");
+const { Cart , CartItem} = require("../../db");
 
 exports.getAll = async (req, res, next) => {
   try {
