@@ -36,6 +36,10 @@ const SellerRequest = require("./models/SellerRequest")(db);
 const Comment = require("./models/Comment")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Reply = require("./models/Reply")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const Cart = require("./models/Cart")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
+const CartItem = require("./models/CartItem")(db);
 
 //Associations
 
@@ -211,6 +215,57 @@ Reply.belongsTo(Reply, {
   as: "parentReply",
 });
 
+//cart & user
+
+User.hasOne(Cart, {
+  foreignKey: "user_id",
+  onDelete: "CASCADE",
+});
+
+Cart.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+// cart & cartItem
+
+Cart.hasMany(CartItem, {
+  foreignKey: "cart_id",
+  onDelete: "CASCADE",
+  as: "items",
+});
+
+CartItem.belongsTo(Cart, {
+  foreignKey: "cart_id",
+  as: "cart",
+});
+
+//catrtItem & product
+Product.hasMany(CartItem, {
+  foreignKey: "product_id",
+  onDelete: "CASCADE",
+});
+
+CartItem.belongsTo(Product, {
+  foreignKey: "product_id",
+  as: "product",
+});
+
+//cartItem & seller
+Seller.hasMany(CartItem, {
+  foreignKey: "seller_id",
+  onDelete: "CASCADE",
+});
+
+CartItem.belongsTo(Seller, {
+  foreignKey: "seller_id",
+  as: "seller",
+});
+
+//point:
+//we can put as for both associations => exmple: producs as "cartItems" & cartItems as "product"
+//if we dont put as for one of side the assiciate its as in include finds be own models name but if put as in associte , as in include be as in associate
+
 module.exports = {
   db,
   User,
@@ -225,4 +280,6 @@ module.exports = {
   SellerRequest,
   Comment,
   Reply,
+  Cart,
+  CartItem,
 };

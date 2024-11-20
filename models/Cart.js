@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 
-//user_id & cartItem_id (as items) => column relations
+//user_id  => column relations
 
 const Cart = (sequelize) => {
   return sequelize.define(
