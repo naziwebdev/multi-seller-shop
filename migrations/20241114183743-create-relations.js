@@ -165,6 +165,46 @@ module.exports = {
         onDelete: "CASCADE",
       });
 
+      await queryInterface.addColumn("carts", "user_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull:false,
+        references: {
+          model: "users",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
+      await queryInterface.addColumn("cart_items", "product_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull:false,
+        references: {
+          model: "products",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
+      await queryInterface.addColumn("cart_items", "seller_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull:false,
+        references: {
+          model: "sellers",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
+      await queryInterface.addColumn("cart_items", "cart_id", {
+        type: Sequelize.INTEGER.UNSIGNED,
+        allowNull:false,
+        references: {
+          model: "carts",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      });
+
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
