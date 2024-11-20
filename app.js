@@ -11,8 +11,10 @@ const categoryRouter = require("./routes/v1/category");
 const productRouter = require("./routes/v1/product");
 const sellerRequestRouter = require("./routes/v1/sellerRequest");
 const commentRouter = require("./routes/v1/comment");
+const cartRouter = require("./routes/v1/cart");
+
 const { redirectToProduct } = require("./controllers/v1/shortLink");
-const {errorHandler} = require('./middlewares/errorHandler')
+const { errorHandler } = require("./middlewares/errorHandler");
 
 const app = express();
 
@@ -38,6 +40,7 @@ app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/seller-requests", sellerRequestRouter);
 app.use("/api/v1/comments", commentRouter);
+app.use("/api/v1/carts", cartRouter);
 app.get("/p/:shortIdentifier", redirectToProduct);
 
 //404 not found path
@@ -47,6 +50,6 @@ app.use((req, res) => {
   return res.status(404).json({ message: "404 ! not fount the path" });
 });
 
-app.use(errorHandler)
+app.use(errorHandler);
 
 module.exports = app;
