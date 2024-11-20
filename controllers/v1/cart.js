@@ -106,6 +106,30 @@ exports.add = async (req, res, next) => {
 
 exports.remove = async (req, res, next) => {
   try {
+    const { product_id, seller_id } = req.body;
+
+    await removeFromCartValidator.validate(req.body, { abortEarly: false });
+
+    const cart = await Cart.findOne({ where: { user_id: req.user.id } });
+    if (!cart) {
+      return res.status(404).json({ message: "not found cart" });
+    }
+
+    const productCart = await CartItem.findOne({
+      where: { product_id, seller_id },
+    });
+    if (!productCart) {
+      return res.status(404).json({ message: "not found product" });
+    }
+
+    if (productCart && productCart.quantity > 1) {
+      productCart.quantity = productCart.quantity - 1;
+      await productCart.save();
+    } else if (productCart.quantity === 1) {
+      await CartItem.destroy({ where: { product_id, seller_id } });
+    }
+
+    return res.status(200).json({ message: "item minus/remove successfully" });
   } catch (error) {
     next(error);
   }
