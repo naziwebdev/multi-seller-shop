@@ -6,6 +6,25 @@ const {
 
 exports.getAll = async (req, res, next) => {
   try {
+    const user = req.user;
+    const cart = await Cart.findOne({
+      include: [
+        {
+          model: CartItem,
+          as: "items",
+          include: [
+            {
+              model: Seller,
+              as: "seller",
+            },
+          ],
+        },
+      ],
+
+      where: { user_id: user.id },
+    });
+
+    return res.status(200).json(cart);
   } catch (error) {
     next(error);
   }
@@ -62,11 +81,11 @@ exports.add = async (req, res, next) => {
     const existingItem = await CartItem.findOne({
       where: { seller_id, product_id },
     });
-  
+
     if (existingItem) {
       existingItem.quantity = existingItem.quantity + quantity;
       existingItem.priceAtTimeOfAdding = priceAtTimeOfAdding;
-      await existingItem.save()
+      await existingItem.save();
     } else {
       await CartItem.create({
         quantity,
