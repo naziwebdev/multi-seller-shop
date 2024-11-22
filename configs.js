@@ -19,6 +19,13 @@ module.exports = {
     refreshTokenExpireIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
   },
 
+  zarinpal: {
+    createPeyment: process.env.ZARINPAN_CREATE_PAYMENT,
+    startPayment: process.env.ZARINPAN_START_PAY,
+    verifyPeyment: process.env.ZARINPAN_VERIFY_PAYMENT,
+    merchantID: process.env.ZARINPAL_MERCHANT_ID,
+  },
+
   redis: {
     uri: process.env.REDIS_URI,
   },
