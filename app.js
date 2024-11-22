@@ -12,6 +12,7 @@ const productRouter = require("./routes/v1/product");
 const sellerRequestRouter = require("./routes/v1/sellerRequest");
 const commentRouter = require("./routes/v1/comment");
 const cartRouter = require("./routes/v1/cart");
+const checkoutRouter = require("./routes/v1/checkout");
 
 const { redirectToProduct } = require("./controllers/v1/shortLink");
 const { errorHandler } = require("./middlewares/errorHandler");
@@ -41,6 +42,7 @@ app.use("/api/v1/products", productRouter);
 app.use("/api/v1/seller-requests", sellerRequestRouter);
 app.use("/api/v1/comments", commentRouter);
 app.use("/api/v1/carts", cartRouter);
+app.use("/api/v1/checkout", checkoutRouter);
 app.get("/p/:shortIdentifier", redirectToProduct);
 
 //404 not found path
