@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
-const { Product, Seller, SubCategory } = require("../../db");
+const { Product, Seller, SubCategory, SellersProduct } = require("../../db");
+const { Op, fn, col, Sequelize } = require("sequelize");
 const {
   createProductValidator,
   editProductValidator,
@@ -148,18 +149,41 @@ exports.edit = async (req, res, next) => {
 };
 exports.getAll = async (req, res, next) => {
   try {
-    const { page = 1, limit = 1 } = req.query;
+    const { page = 1, limit = 2, name, subCategory, filterValues } = req.query;
+
     const offset = (page - 1) * limit;
+
+    const filters = {};
+
+    if (name) {
+      filters.name = { [Op.like]: `%${name}%` };
+    }
+
+    if (subCategory) {
+      filters.subCategory_id = +subCategory;
+    }
+
+    if (filterValues) {
+      const parsedFilterValues = JSON.parse(filterValues);
+      Object.keys(parsedFilterValues).forEach((key) => {
+        filters[`filtersValue.${key}`] = parsedFilterValues[key];
+      });
+    }
 
     const products = await Product.findAll({
       include: [
         {
           model: Seller,
           as: "Sellers",
+          through: {
+            model: SellersProduct,
+            as: "sellersProduct",
+          },
         },
       ],
       offset: +offset,
       limit: +limit,
+      where: filters,
     });
 
     products.forEach((product) => {
