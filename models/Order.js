@@ -47,13 +47,6 @@ const Order = (sequelize) => {
       timestamps: true,
       createdAt: "created_at",
       updatedAt: "updated_at",
-      getterMethods: {
-        totalPrice() {
-          return this.items.reduce((total, item) => {
-            return total + item.priceAtTimeOfPurchase * item.quantity;
-          }, 0);
-        },
-      },
     }
   );
 };
