@@ -20,10 +20,10 @@ module.exports = {
   },
 
   zarinpal: {
-    createPeyment: process.env.ZARINPAN_CREATE_PAYMENT,
+    baseUrl: process.env.ZARINPAN_BASE_URL_API,
     startPayment: process.env.ZARINPAN_START_PAY,
-    verifyPeyment: process.env.ZARINPAN_VERIFY_PAYMENT,
     merchantID: process.env.ZARINPAL_MERCHANT_ID,
+    callbackUrl: process.env.ZARINPAL_CALLBACK_URL,
   },
 
   redis: {
