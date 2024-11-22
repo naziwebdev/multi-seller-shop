@@ -25,3 +25,20 @@ exports.createPeyment = async function ({ amoutInRial, description }) {
     throw new Error(error);
   }
 };
+
+exports.verifyPeyment = async function ({ amoutInRial, authority }) {
+  try {
+    const response = await zarinpal.post("/verify.json", {
+      merchant_id: configs.zarinpal.merchantID,
+      amount: amoutInRial,
+      authority,
+    });
+
+    const data = response.data.data;
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
