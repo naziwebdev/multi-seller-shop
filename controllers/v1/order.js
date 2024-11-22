@@ -1,5 +1,6 @@
 const { Order, OrderItem, Seller, Product } = require("../../db");
-const {} = require("../../utils/paginationData");
+const { createPaginationData } = require("../../utils/paginationData");
+const { updateOrderValidator } = require("../../validators/order");
 
 exports.getAll = async (req, res, next) => {
   try {
@@ -49,7 +50,15 @@ exports.getAll = async (req, res, next) => {
       return item;
     });
 
-    return res.status(200).json(orderItems);
+    return res.status(200).json({
+      orderItems,
+      pagination: createPaginationData(
+        page,
+        limit,
+        orderItems.length,
+        "Orders"
+      ),
+    });
   } catch (error) {
     next(error);
   }
@@ -57,6 +66,24 @@ exports.getAll = async (req, res, next) => {
 
 exports.edit = async (req, res, next) => {
   try {
+    const { status, postTrackingCode } = req.body;
+    const { id } = req.params;
+
+    if (id === undefined || id === null || id === "" || isNaN(id)) {
+      return res.status(422).json({ message: "id is not valid" });
+    }
+
+    await updateOrderValidator.validate(req.body, { abortEarly: false });
+
+    const order = await Order.findOne({ where: { id } });
+    if (!order) {
+      return res.status(404).json({ message: "not found order" });
+    }
+
+    (order.status = status), (order.postTrackingCode = postTrackingCode);
+    await order.save();
+
+    return res.status(200).json({ message: "order updated successfully" });
   } catch (error) {
     next(error);
   }
