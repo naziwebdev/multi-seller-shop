@@ -40,9 +40,13 @@ const Reply = require("./models/Reply")(db);
 const Cart = require("./models/Cart")(db);
 /** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const CartItem = require("./models/CartItem")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Checkout = require("./models/Checkout")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const CheckoutItem = require("./models/CheckoutItem")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const Order = require("./models/Order")(db);
+/** @type {import('sequelize').ModelCtor<import('sequelize').Model<any, any>} */
 const OrderItem = require("./models/OrderItem")(db);
 
 //Associations
